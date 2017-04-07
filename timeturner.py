@@ -2,7 +2,7 @@
 
 import datetime
 
-real_datetime = datetime.datetime
+ORIG_DATETIME = datetime.datetime
 
 class Freeze(object):
     def __init__(self, freeze_time):
@@ -13,11 +13,19 @@ class Freeze(object):
         datetime.datetime.freeze_time = self.freeze_time
 
     def __exit__(self, *args):
-        datetime.datetime = real_datetime
+        datetime.datetime = ORIG_DATETIME
 
 class _FreezeDatetime(datetime.datetime):
     freeze_time = None
 
     @classmethod
+    def today(cls):
+        return cls.freeze_time
+
+    @classmethod
     def now(cls):
+        return cls.freeze_time
+
+    @classmethod
+    def utcnow(cls):
         return cls.freeze_time
