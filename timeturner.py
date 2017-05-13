@@ -15,7 +15,12 @@ class Freeze(object):
     def __exit__(self, *args):
         datetime.datetime = ORIG_DATETIME
 
-class _FreezeDatetime(datetime.datetime):
+class _FreezeDatetimeMeta(type):
+    @classmethod
+    def __instancecheck__(self, obj):
+        return isinstance(obj, ORIG_DATETIME)
+
+class _FreezeDatetime(ORIG_DATETIME, metaclass=_FreezeDatetimeMeta):
     freeze_time = None
 
     @classmethod
